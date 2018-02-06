@@ -1,31 +1,67 @@
+const dataAccess = require('../../dal/dataAccess');
+const cardQueryHelper = require('../../dal/cards');
+const util = require('../helpers/util');
+const config = require('../../settings');
 
-exports.GetAllCards = (req, res, next) => {
-    res.status(200).json({
-        message: 'Get all cards list!'
+exports.GetCards = (req, res, next) => {
+    const id = req.params.userId;
+    const objQuery = cardQueryHelper.SelectUser(id);
+    dataAccess.executeQuery(objQuery, (err, data) => {
+        if (err) {
+            util.Error500(req, res, err);
+        }
+        else {
+            util.SuccessfulGetJsonResponse(req, res, data);
+        }
     });
 }
 
-exports.GetCard = (req, res, next) => {
-    const id = req.params.id;
-    res.status(200).json({
-        message: `Get card detail with id : ${id}`
-    });
-}
-
-exports.CreateCard = (req, res, next) => {
+exports.CreateCards = (req, res, next) => {
     const card = {
         userId: req.body.userId,
         cardNumber: req.body.cardNumber,
-        expiryDate: req.body.expiryDate
+        cardType: req.body.cardType,
+        expiryDate: req.body.expiryDate,
+        isActive: req.body.isActive
     };
-    res.status(200).json({
-        message: 'Post Cards Api called!',
-        createdCard: card
-    });
+    if (card.userId && card.cardNumber && card.expiryDate && card.isActive) {
+        card.cardNumber = util.PerformCeasar(card.cardNumber, 12, true);
+        const queryObj = cardQueryHelper.CreateCardQuery(card);
+        dataAccess.executeQuery(queryObj, (err, resp) => {
+            if (err) {
+                util.Error500(req, res, err);
+            }
+            else {
+                util.SuccessfulPostResponse(req, res, resp);
+            }
+        });
+    }
+    else {
+        util.Error404(req, res, new Error('Invalid json body!'));
+    }
 }
 
 exports.UpdateCard = (req, res, next) => {
-    res.status(200).json({
-        message: 'Put Card Api called!'
-    });
+    const card = {
+        userId: req.body.userId,
+        cardId: req.body.cardId,
+        cardNumber: req.body.cardNumber,
+        cardType: req.body.cardType,
+        expiryDate: req.body.expiryDate,
+        isActive: req.body.isActive
+    };
+    if (card.userId && card.cardId && card.cardNumber && card.cardType && card.expiryDate) {
+        const queryObj = cardQueryHelper.UpdateCard(card);
+        dataAccess.executeQuery(queryObj.text, queryObj.values, (err, resp) => {
+            if (err) {
+                util.Error500(req, res, err);
+            }
+            else {
+                util.SuccessfulGetJsonResponse(req, res, resp);
+            }
+        });
+    }
+    else {
+        util.Error400(req, res, new Error('Invalid json body!'));
+    }
 }
