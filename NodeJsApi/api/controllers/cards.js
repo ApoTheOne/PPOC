@@ -37,7 +37,7 @@ exports.CreateCards = (req, res, next) => {
         });
     }
     else {
-        util.Error404(req, res, new Error('Invalid json body!'));
+        util.Error400(req, res, new Error('Invalid json body!'));
     }
 }
 

@@ -51,7 +51,7 @@ exports.Error500 = function (request, response, err) {
 }
 
 exports.Error400 = function (request, response, err) {
-    response.writeHead(404, 'Bad request!', { 'Content-type': 'application/json' });
+    response.writeHead(400, 'Bad request!', { 'Content-type': 'application/json' });
     response.write(JSON.stringify({ error: `Bad request: ${err}` }));
     response.end();
 }
