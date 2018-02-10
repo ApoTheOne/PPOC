@@ -1,34 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const userController = require('../controllers/users');
 
-router.get('/', (req, res, next) => {
-    res.status(200).json({
-        messgae: 'Get all users list!'
-    });
-});
+router.get('/', userController.getAllUsers);
 
-router.get('/:id', (req, res, next) => {
-    const id = req.params.id;
-    res.status(200).json({
-        messgae: `Get user detail with id : ${id}`
-    });
-});
+router.get('/:id', userController.GetUser);
 
-router.post('/', (req, res, next) => {
-    const user = {
-        name: req.body.name,
-        email: req.body.email
-    };
-    res.status(200).json({
-        messgae: 'Post User Api called!',
-        createdUser: user
-    });
-});
+router.post('/', userController.CreateUser);
 
-router.put('/', (req, res, next) => {
-    res.status(200).json({
-        messgae: 'Put User Api called!'
-    });
-});
+router.put('/', userController.UpdateUser);
 
 module.exports = router;

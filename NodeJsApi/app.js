@@ -3,7 +3,9 @@ const app = express();
 const bodyParser = require('body-parser');
 
 const usersRouter = require('./api/routes/users');
-const cardsRouter = require('./api/routes/users');
+const cardsRouter = require('./api/routes/cards');
+const loginRouter = require('./api/routes/login');
+var compression = require('compression');
 
 app.use(bodyParser.urlencoded({
     extended: false
@@ -20,8 +22,11 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/users', usersRouter);
-app.use('/cards', cardsRouter);
+app.use(compression());
+
+app.use('/registration', usersRouter);
+app.use('/login', loginRouter);
+app.use('/cardDetails', cardsRouter);
 
 app.use((req, res, next) => {
     const error = new Error('Resource not found!');
