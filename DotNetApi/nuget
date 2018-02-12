@@ -1,0 +1,14 @@
+Usage: dotnet add <PROJECT> package [options] <PACKAGE_NAME>
+
+Arguments:
+  <PROJECT>        The project file to operate on. If a file is not specified, the command will search the current directory for one.
+  <PACKAGE_NAME>   The package reference to add.
+
+Options:
+  -h, --help                                Show help information.
+  -v, --version <VERSION>                   Version for the package to be added.
+  -f, --framework <FRAMEWORK>               Adds reference only when targeting a specific framework.
+  -n, --no-restore                          Adds reference without performing restore preview and compatibility check.
+  -s, --source <SOURCE>                     Specifies NuGet package sources to use during the restore.
+  --package-directory <PACKAGE_DIRECTORY>   Restores the packages to the specified directory.
+
