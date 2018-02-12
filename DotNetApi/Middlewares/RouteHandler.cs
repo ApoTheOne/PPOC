@@ -56,7 +56,7 @@ namespace CorePOC.Middlewares
                         };
                         if (_service.IsAuthorized(objauth))
                         {
-                            var result = _service.GetCardDetailsAsync(userId);
+                            //var result = _service.GetCardDetailsAsync(userId);
                             //var result=_service.GetConsumerDetails();
                         }
                         else
