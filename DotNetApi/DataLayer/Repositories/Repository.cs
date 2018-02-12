@@ -88,6 +88,40 @@ namespace CorePOC.DataLayer.Repositories
            
         }
 
+        public async Task<string> AddConsumerAsync(Consumer consumer)
+        {
+            if(!string.IsNullOrEmpty(consumer.emailid))
+            {
+                consumer.pass = Helpers.encodeString(consumer.pass,consumer.pass.Length);
+                using (IDbConnection dbConnection = _connectionFactory.GetConnection)
+                {
+                    try
+                    {
+                        dbConnection.Open();
+                        /* Call via inline query: It is working*/
+                        // int i = await dbConnection.ExecuteAsync($"INSERT INTO Consumer(email,first_name,last_name,password) VALUES('{consumer.emailid}','{consumer.firstname}','{consumer.lastname}','{consumer.pass}');");
+                        // return i.ToString();
+                        /* Calling via proc */
+                        var query = "addConsumer";
+                        var param = new DynamicParameters();
+                        param.Add("@emailid", consumer.emailid);
+                        param.Add("@firstname", consumer.firstname);
+                        param.Add("@lastname", consumer.lastname);
+                        param.Add("@pass", consumer.pass);
+                        return await SqlMapper.ExecuteScalarAsync<string>(dbConnection, query, param, commandType: CommandType.StoredProcedure);                    
+                    }
+                    catch (Exception ex)
+                    {
+                        return $"Error in AddConsumer Reposirory, Message is {ex.Message}";                    
+                    }
+                } 
+            }
+            else
+            {
+                return "Please pass the consumer details";                    
+            }
+           
+        }
 
         public string GetConsumerDetails(Consumer consumer)
         {
@@ -102,6 +136,28 @@ namespace CorePOC.DataLayer.Repositories
                     param.Add("@emailid", consumer.emailid);
                     param.Add("@pass", consumer.pass);
                     var consumers =  SqlMapper.Query<string>(dbConnection, query, param, commandType: CommandType.StoredProcedure); 
+                    return consumers.FirstOrDefault();
+                }
+                catch (Exception ex)
+                {
+                    return $"Error in GetConsumerDetails Reposirory, Message is {ex.Message}";                    
+                }
+            }
+        }
+
+        public async Task<string> GetConsumerDetailsAsync(Consumer consumer)
+        {
+            // ConsumerDetails consumerDetails=null;
+            using (IDbConnection dbConnection = _connectionFactory.GetConnection)
+            {
+                try
+                {
+                    dbConnection.Open();
+                    var query = "getconsumerdetails";
+                    var param = new DynamicParameters();
+                    param.Add("@emailid", consumer.emailid);
+                    param.Add("@pass", consumer.pass);
+                    var consumers =  await SqlMapper.QueryAsync<string>(dbConnection, query, param, commandType: CommandType.StoredProcedure); 
                     return consumers.FirstOrDefault();
                 }
                 catch (Exception ex)

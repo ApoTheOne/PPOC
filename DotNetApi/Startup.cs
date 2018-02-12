@@ -6,8 +6,10 @@ using CorePOC.DataLayer.InfraStructure;
 using CorePOC.DataLayer.Repositories;
 using CorePOC.DataLayer.Services;
 using CorePOC.DataLayer.UnitOfWork;
+using CorePOC.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -27,7 +29,6 @@ namespace CorePOC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
             services.AddSingleton<IConfiguration>(Configuration);
 
             
@@ -38,6 +39,8 @@ namespace CorePOC
             services.AddTransient<IConnectionFactory, ConnectionFactory>();
 
             services.AddTransient<IAuthFactory,AuthFactory>();
+
+            services.AddTransient<RouteHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,8 +50,24 @@ namespace CorePOC
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseRouteHandlerMiddleware();
+            //app.Map("/registration", app.UseMiddleware<RegistrationMiddleware>());
+            // app.UseRegistrationMiddleware();
+            // app.Map("/login", LoginEndpointHandler);
+        }
 
-            app.UseMvc();
+        private void RegisterEndpointHandler(IApplicationBuilder app)
+        {
+            app.Run(async context => {
+                await context.Response.WriteAsync("hit the register api!");
+            });
+        }
+
+        private void LoginEndpointHandler(IApplicationBuilder app)
+        {
+            app.Run(async context => {
+                await context.Response.WriteAsync("hit the login api");
+            });
         }
     }
 }

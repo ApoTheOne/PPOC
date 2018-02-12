@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using CorePOC.DataLayer.UnitOfWork;
 using CorePOC.Model;
 
@@ -15,10 +16,21 @@ namespace CorePOC.DataLayer.Services
             return _unitOfWork.Repository.AddConsumer(consumer);
         }
 
+        public async Task<string> AddConsumerAsync(Consumer consumer)
+        {
+            return await _unitOfWork.Repository.AddConsumerAsync(consumer);
+        }
+
         public string GetConsumerDetails(Consumer consumer)
         {
             return _unitOfWork.Repository.GetConsumerDetails(consumer);
         }
+
+        public async Task<string> GetConsumerDetailsAsync(Consumer consumer)
+        {
+            return await _unitOfWork.Repository.GetConsumerDetailsAsync(consumer);
+        }
+
         public string AddCardDetails(Card card)
         {
            return _unitOfWork.Repository.AddCardDetails(card);
