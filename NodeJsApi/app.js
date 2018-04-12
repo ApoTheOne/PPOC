@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -5,6 +6,7 @@ const bodyParser = require('body-parser');
 const usersRouter = require('./api/routes/users');
 const cardsRouter = require('./api/routes/cards');
 const loginRouter = require('./api/routes/login');
+const testRouter = require('./api/routes/test');
 var compression = require('compression');
 
 app.use(bodyParser.urlencoded({
@@ -27,6 +29,7 @@ app.use(compression());
 app.use('/registration', usersRouter);
 app.use('/login', loginRouter);
 app.use('/cardDetails', cardsRouter);
+app.use('/test', testRouter)
 
 app.use((req, res, next) => {
     const error = new Error('Resource not found!');
