@@ -5,7 +5,7 @@ settings.ApiPassword = process.env.APIPWD;
 
 settings.dbSettings = {
     user: process.env.PGUSER,
-    host: process.env.APIHOST,
+    host: process.env.DBHOST,
     database: process.env.PGDB,
     password: process.env.PGPWD,
     port: process.env.PGDBPORT
