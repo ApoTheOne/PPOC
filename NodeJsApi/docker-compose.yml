@@ -25,5 +25,10 @@ services:
     constraints: [node.role == manager]
   networks:
    - webnet
+ db:
+  image: postgres:10
+  restart: always
+  environment:
+   POSTGRES_PASSWORD: passwordGoesHere
 networks:
   webnet: 
