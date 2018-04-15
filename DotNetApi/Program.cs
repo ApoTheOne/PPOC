@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace DotNetCoreApi
+namespace CorePOC
 {
     public class Program
     {
@@ -19,7 +19,10 @@ namespace DotNetCoreApi
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseKestrel()
+                .UseIISIntegration()
                 .UseStartup<Startup>()
+                .UseUrls("http://0.0.0.0:8080/")
                 .Build();
     }
 }
